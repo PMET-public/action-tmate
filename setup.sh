@@ -59,11 +59,11 @@ ssh_url="$(tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}')"
 text="<@${slack_user:-$GITHUB_ACTOR}> use \`$ssh_url\` to access <https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID|this run> of <https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA|this $GITHUB_REPOSITORY commit>$commit_msg"
 curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$text\"}" "$SLACK_WEBHOOK_URL_FOR_TMATE_FROM_GITHUB_WORKFLOW"
 
-{ # every 120 sec, see if tmate still running; if not, kill other sleep (and free up GH runner)
+{ # every min, see if tmate still running; if not, kill other sleep (and free up GH runner)
   while ps -ax -o comm | grep -q tmate; do
-    sleep 120
+    sleep 60
   done
   pkill sleep
 } > /dev/null 2>&1 &
 
-sleep 7200 # 2 hours
+sleep 300 # 2 hours
