@@ -66,4 +66,4 @@ curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$text\"}" "
   pkill sleep
 } > /dev/null 2>&1 &
 
-sleep 300 # 2 hours
+sleep 7200 # 2 hours
