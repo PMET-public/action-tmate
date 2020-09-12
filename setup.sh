@@ -56,9 +56,9 @@ fi
 slack_user="$(curl -s "https://github.com/$GITHUB_ACTOR" | perl -0777 -ne '/.*content="[^"]*~([^ ]+)/s and print $1 and last')"
 slack_user="${slack_user%.}" # sometimes a mysterious trailing period exists in the html?
 ssh_url="$(tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}')"
-text="<@${slack_user:-$GITHUB_ACTOR}> use \`$ssh_url\` to access
-  <https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID?check_suite_focus=true|this run of the '$GITHUB_WORKFLOW' workflow>
-  of <https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA|this $GITHUB_REPOSITORY commit>$commit_msg"
+text="<@${slack_user:-$GITHUB_ACTOR}> use \`$ssh_url\` to access"
+text+=" <https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID?check_suite_focus=true|this run of the '$GITHUB_WORKFLOW' workflow>"
+text+=" of <https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA|this $GITHUB_REPOSITORY commit>$commit_msg"
 curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$text\"}" "$SLACK_WEBHOOK_URL_FOR_TMATE_FROM_GITHUB_WORKFLOW"
 
 { # every 10s, see if tmate still running; if not, kill other sleep (and free up GH runner)
